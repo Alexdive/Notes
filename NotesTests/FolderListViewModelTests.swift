@@ -12,18 +12,25 @@ final class FolderListViewModelTests: XCTestCase {
 
     var coordinator: FolderListCoordinatorMock!
     var dataBase: DataBaseMock!
+    var dataSource: FolderDataSourceMock!
     var sut: FolderListViewModel!
     
     override func setUpWithError() throws {
         coordinator = .init()
         dataBase = .init()
-        sut = .init(coordinator: coordinator, dataBase: dataBase)
+        dataSource = .init()
+        sut = .init(coordinator: coordinator, dataBase: dataBase, dataSource: dataSource)
     }
 
     override func tearDownWithError() throws {
         coordinator = nil
         dataBase = nil
+        dataSource = nil
         sut = nil
+    }
+    
+    func test_dataSourceFetchDataOnViewModelInit() {
+        XCTAssertTrue(dataSource.hasPerformedFetch)
     }
 
     func test_folderIsCreatedWhenNameIsNotEmpty() {
@@ -56,5 +63,21 @@ final class FolderListViewModelTests: XCTestCase {
         sut.delete(folder: folder)
         
         XCTAssertIdentical(folder, dataBase.deletedFolder)
+    }
+    
+    func test_sortPerformedForDifferentOrder() {
+        let sortOption: SortCondition = .name
+        
+        sut.sort(by: sortOption)
+        
+        XCTAssertEqual(sortOption, dataSource.performedSort)
+    }
+    
+    func test_sortNotPerformedForSameOrder() {
+        let sortOption: SortCondition = .creationDate
+        
+        sut.sort(by: sortOption)
+        
+        XCTAssertNil(dataSource.performedSort)
     }
 }
