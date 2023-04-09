@@ -8,14 +8,14 @@ import Foundation
 import CoreData
 
 class NoteDetailsViewModel {
-    private let folderId: NSManagedObjectID
+    private let folderId: ObjectID
     private lazy var creationDate: Date = { note?.creationDate ?? Date() }()
     
     var note: Note?
     var creationDateTitle: String { creationDate.shortDate() }
     var body: String? { note?.body }
     
-    init(folderId: NSManagedObjectID) {
+    init(folderId: ObjectID) {
         self.folderId = folderId
     }
     
@@ -29,7 +29,7 @@ class NoteDetailsViewModel {
         if let note = note {
             note.update(name: name, body: body)
         } else {
-            Note.create(name: name, body: body, creationDate: creationDate, folderObjectId: folderId)
+            Note.create(name: name, body: body, creationDate: creationDate, folderObjectId: folderId as! NSManagedObjectID)
         }
     }
 }

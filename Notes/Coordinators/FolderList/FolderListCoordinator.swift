@@ -7,6 +7,10 @@
 import UIKit
 import CoreData
 
+protocol FolderListCoordinating {
+    func showNotesList(folderId: ObjectID)
+}
+
 class FolderListCoordinator: Coordinator {
     private let router: Router
     
@@ -22,8 +26,10 @@ class FolderListCoordinator: Coordinator {
             self.router.setRootController(folderController)
         }
     }
-    
-    func showNotesList(folderId: NSManagedObjectID) {
+}
+
+extension FolderListCoordinator: FolderListCoordinating {
+    func showNotesList(folderId: ObjectID) {
         NoteListCoordinator(router: router, folderId: folderId).start()
     }
 }

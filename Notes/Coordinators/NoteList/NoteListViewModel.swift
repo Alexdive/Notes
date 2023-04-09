@@ -8,16 +8,16 @@ import UIKit
 import CoreData
 
 class NoteListViewModel {
-    private let folderId: NSManagedObjectID
+    private let folderId: ObjectID
     private let coordinator: NoteListCoordinator
     private var sort: SortCondition = .creationDate
     
     var fetchedResultsController: NSFetchedResultsController<Note>
     
-    init(coordinator: NoteListCoordinator, folderId: NSManagedObjectID) {
+    init(coordinator: NoteListCoordinator, folderId: ObjectID) {
         self.coordinator = coordinator
         self.folderId = folderId
-        self.fetchedResultsController = Note.createFetchedResultsController(sort: sort, folderId: folderId)
+        self.fetchedResultsController = Note.createFetchedResultsController(sort: sort, folderId: folderId as! NSManagedObjectID)
         try? self.fetchedResultsController.performFetch()
     }
 
@@ -38,7 +38,7 @@ class NoteListViewModel {
         self.sort = sort
         
         let delegate = fetchedResultsController.delegate
-        fetchedResultsController = Note.createFetchedResultsController(sort: sort, folderId: folderId)
+        fetchedResultsController = Note.createFetchedResultsController(sort: sort, folderId: folderId as! NSManagedObjectID)
         fetchedResultsController.delegate = delegate
         
         try? fetchedResultsController.performFetch()

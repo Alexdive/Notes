@@ -8,11 +8,19 @@
 import Foundation
 import CoreData
 
+public protocol FolderProtocol: AnyObject, DataSourceResult {
+    var creationDate: Date? { get set }
+    var name: String? { get set }
+    var notes: NSOrderedSet? { get set }
+    
+    var contentObjectID: ObjectID { get }
+}
+
 enum FolderError: Error {
     case existingFolder
 }
 
-enum SortCondition: String {
+public enum SortCondition: String {
     case name
     case creationDate
 }
@@ -36,7 +44,11 @@ public class Folder: NSManagedObject {
             folder.name = name
             folder.creationDate = creationDate
 
-            try? context.save()
+            do {
+                try context.save()
+            } catch {
+                print(error.localizedDescription)
+            }
 
             DispatchQueue.main.async {
                 completion(nil)
@@ -62,4 +74,8 @@ public class Folder: NSManagedObject {
             try? context.save()
         }
     }
+}
+
+extension Folder: FolderProtocol {
+    public var contentObjectID: ObjectID { objectID }
 }

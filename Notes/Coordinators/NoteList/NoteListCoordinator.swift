@@ -9,9 +9,9 @@ import CoreData
 
 class NoteListCoordinator: Coordinator {
     private let router: Router
-    private let folderId: NSManagedObjectID
+    private let folderId: ObjectID
     
-    init(router: Router, folderId: NSManagedObjectID) {
+    init(router: Router, folderId: ObjectID) {
         self.router = router
         self.folderId = folderId
     }
