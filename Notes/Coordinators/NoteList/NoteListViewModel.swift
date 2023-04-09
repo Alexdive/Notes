@@ -7,7 +7,6 @@
 import UIKit
 
 class NoteListViewModel {
-    private let folderId: ObjectID
     private let coordinator: NoteListCoordinating
     private var sort: SortCondition = .creationDate
     private let dataBase: Persistence
@@ -15,11 +14,9 @@ class NoteListViewModel {
     var dataSource: DataSourceProtocol
     
     init(coordinator: NoteListCoordinating,
-         folderId: ObjectID,
          dataSource: DataSourceProtocol,
          dataBase: Persistence = Database.shared) {
         self.coordinator = coordinator
-        self.folderId = folderId
         self.dataBase = dataBase
         self.dataSource = dataSource
         

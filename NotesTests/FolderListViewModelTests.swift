@@ -9,7 +9,6 @@ import XCTest
 @testable import Notes
 
 final class FolderListViewModelTests: XCTestCase {
-
     var coordinator: FolderListCoordinatorMock!
     var dataBase: DataBaseMock!
     var dataSource: DataSourceMock!

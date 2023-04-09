@@ -19,6 +19,7 @@
 		0D8A3CBD29E3084E00F4E937 /* NoteListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A3CBC29E3084E00F4E937 /* NoteListViewModelTests.swift */; };
 		0D8A3CBF29E308FD00F4E937 /* NoteListCoordinatorMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A3CBE29E308FD00F4E937 /* NoteListCoordinatorMock.swift */; };
 		0D8A3CC129E30B8E00F4E937 /* NoteStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A3CC029E30B8E00F4E937 /* NoteStub.swift */; };
+		0D8A3CC329E30DED00F4E937 /* NoteDetailsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A3CC229E30DED00F4E937 /* NoteDetailsViewModelTests.swift */; };
 		F9311C7E26270EC600D9F82D /* FolderListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9311C7D26270EC600D9F82D /* FolderListViewModel.swift */; };
 		F9311C8226271A2900D9F82D /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9311C8126271A2900D9F82D /* Database.swift */; };
 		F96A80592628722600008BC9 /* FolderListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96A80582628722600008BC9 /* FolderListCoordinator.swift */; };
@@ -72,6 +73,7 @@
 		0D8A3CBC29E3084E00F4E937 /* NoteListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListViewModelTests.swift; sourceTree = "<group>"; };
 		0D8A3CBE29E308FD00F4E937 /* NoteListCoordinatorMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListCoordinatorMock.swift; sourceTree = "<group>"; };
 		0D8A3CC029E30B8E00F4E937 /* NoteStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteStub.swift; sourceTree = "<group>"; };
+		0D8A3CC229E30DED00F4E937 /* NoteDetailsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailsViewModelTests.swift; sourceTree = "<group>"; };
 		F9311C7D26270EC600D9F82D /* FolderListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderListViewModel.swift; sourceTree = "<group>"; };
 		F9311C8126271A2900D9F82D /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		F96A80582628722600008BC9 /* FolderListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderListCoordinator.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				0D8A3CAB29E1A25F00F4E937 /* Mocks and Stubs */,
 				0D8A3CA229E1A0E300F4E937 /* FolderListViewModelTests.swift */,
 				0D8A3CBC29E3084E00F4E937 /* NoteListViewModelTests.swift */,
+				0D8A3CC229E30DED00F4E937 /* NoteDetailsViewModelTests.swift */,
 			);
 			path = NotesTests;
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D8A3CC329E30DED00F4E937 /* NoteDetailsViewModelTests.swift in Sources */,
 				0D8A3CBF29E308FD00F4E937 /* NoteListCoordinatorMock.swift in Sources */,
 				0D8A3CAA29E1A25800F4E937 /* FolderListCoordinatorMock.swift in Sources */,
 				0D8A3CB129E1AA5A00F4E937 /* FolderStub.swift in Sources */,

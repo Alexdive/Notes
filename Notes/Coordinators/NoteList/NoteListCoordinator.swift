@@ -23,7 +23,7 @@ class NoteListCoordinator: Coordinator {
     func start() {
         let notesController: NoteListViewController = NoteListViewController.instantiate()
         let dataSourece = NoteDataSource(folderId: folderId)
-        notesController.viewModel = NoteListViewModel(coordinator: self, folderId: folderId, dataSource: dataSourece)
+        notesController.viewModel = NoteListViewModel(coordinator: self, dataSource: dataSourece)
         router.push(notesController)
     }
     

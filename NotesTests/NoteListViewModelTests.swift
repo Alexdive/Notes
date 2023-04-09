@@ -9,8 +9,6 @@ import XCTest
 @testable import Notes
 
 final class NoteListViewModelTests: XCTestCase {
-    
-    var odjectId = ObjectIDStub()
     var coordinator: NoteListCoordinatorMock!
     var dataBase: DataBaseMock!
     var dataSource: DataSourceMock!
@@ -21,7 +19,7 @@ final class NoteListViewModelTests: XCTestCase {
         coordinator = .init()
         dataBase = .init()
         dataSource = .init()
-        sut = .init(coordinator: coordinator, folderId: odjectId, dataSource: dataSource, dataBase: dataBase)
+        sut = .init(coordinator: coordinator, dataSource: dataSource, dataBase: dataBase)
     }
     
     override func tearDown() {
@@ -74,4 +72,3 @@ final class NoteListViewModelTests: XCTestCase {
         XCTAssertNil(dataSource.performedSort)
     }
 }
-

@@ -12,10 +12,15 @@ class DataBaseMock: Persistence {
     // recorded invocations:
     var createdFolderName: String?
     var deletedFolder: FolderProtocol?
+    
     var createdNoteName: String?
     var createdNoteBody: String?
+    
     var deletedNote: NoteProtocol?
+    
     var updatedNote: NoteProtocol?
+    var updatedNoteName: String?
+    var updatedNoteBody: String?
     
     // interface:
     func createFolder(with name: String, creationDate: Date, completion: @escaping (Error?) -> Void) {
@@ -37,6 +42,8 @@ class DataBaseMock: Persistence {
     
     func update(note: NoteProtocol, with name: String, body: String) {
         updatedNote = note
+        updatedNoteName = name
+        updatedNoteBody = body
     }
     
     
