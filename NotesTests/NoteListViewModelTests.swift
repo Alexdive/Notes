@@ -1,28 +1,29 @@
 //
-//  NotesTests.swift
+//  NoteListViewModelTests.swift
 //  NotesTests
 //
-//  Created by Aleksei Permiakov on 08.04.2023.
+//  Created by Aleksei Permiakov on 09.04.2023.
 //
 
 import XCTest
 @testable import Notes
 
-final class FolderListViewModelTests: XCTestCase {
-
-    var coordinator: FolderListCoordinatorMock!
+final class NoteListViewModelTests: XCTestCase {
+    
+    var odjectId = ObjectIDStub()
+    var coordinator: NoteListCoordinatorMock!
     var dataBase: DataBaseMock!
     var dataSource: DataSourceMock!
-    var sut: FolderListViewModel!
+    var sut: NoteListViewModel!
     
     override func setUp() {
         super.setUp()
         coordinator = .init()
         dataBase = .init()
         dataSource = .init()
-        sut = .init(coordinator: coordinator, dataBase: dataBase, dataSource: dataSource)
+        sut = .init(coordinator: coordinator, folderId: odjectId, dataSource: dataSource, dataBase: dataBase)
     }
-
+    
     override func tearDown() {
         super.tearDown()
         coordinator = nil
@@ -34,37 +35,27 @@ final class FolderListViewModelTests: XCTestCase {
     func test_dataSourceFetchDataOnViewModelInit() {
         XCTAssertTrue(dataSource.hasPerformedFetch)
     }
-
-    func test_folderIsCreatedWhenNameIsNotEmpty() {
-        let folderName = "Test folder"
+    
+    func test_addNoteAction() {
+        sut.addNoteTapped()
         
-        sut.createFolder(name: folderName)
-        
-        XCTAssertEqual(folderName, dataBase.createdFolderName)
+        XCTAssertTrue(coordinator.noteCreationHasShown)
     }
     
-    func test_folderIsNotCreatedWhenNameIsEmpty() {
-        let folderName = ""
+    func test_deleteNoteAction() {
+        let noteToDelete = NoteStub()
         
-        sut.createFolder(name: folderName)
+        sut.delete(note: noteToDelete)
         
-        XCTAssertNil(dataBase.createdFolderName)
+        XCTAssertIdentical(noteToDelete, dataBase.deletedNote)
     }
     
-    func test_showNotesListCalled() {
-        let folder = FolderStub()
+    func test_tapNoteAction() {
+        let noteToShow = NoteStub()
         
-        sut.showNotesList(folder: folder)
+        sut.tappedNote(note: noteToShow)
         
-        XCTAssertIdentical(folder.contentObjectID, coordinator.listFolderId)
-    }
-    
-    func test_folderDeleteCalled() {
-        let folder = FolderStub()
-        
-        sut.delete(folder: folder)
-        
-        XCTAssertIdentical(folder, dataBase.deletedFolder)
+        XCTAssertIdentical(noteToShow, coordinator.noteForDetails)
     }
     
     func test_sortPerformedForDifferentOrder() {
@@ -83,3 +74,4 @@ final class FolderListViewModelTests: XCTestCase {
         XCTAssertNil(dataSource.performedSort)
     }
 }
+

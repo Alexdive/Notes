@@ -6,6 +6,11 @@
 
 import UIKit
 
+protocol NoteListCoordinating {
+    func showNoteCreation()
+    func showNoteDetails(_ note: NoteProtocol)
+}
+
 class NoteListCoordinator: Coordinator {
     private let router: Router
     private let folderId: ObjectID
@@ -30,3 +35,5 @@ class NoteListCoordinator: Coordinator {
         NoteDetailsCoordinator(router: router, folderId: folderId).start(note)
     }
 }
+
+extension NoteListCoordinator: NoteListCoordinating {}

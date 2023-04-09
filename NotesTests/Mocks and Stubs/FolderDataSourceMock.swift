@@ -8,7 +8,7 @@
 import Foundation
 @testable import Notes
 
-class FolderDataSourceMock: DataSourceProtocol {
+class DataSourceMock: DataSourceProtocol {
     // recorded invocations:
     var performedSort: SortCondition?
     var hasPerformedFetch = false
