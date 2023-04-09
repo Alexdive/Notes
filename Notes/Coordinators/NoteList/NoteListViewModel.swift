@@ -5,31 +5,36 @@
 //
 
 import UIKit
-import CoreData
 
 class NoteListViewModel {
     private let folderId: ObjectID
     private let coordinator: NoteListCoordinator
     private var sort: SortCondition = .creationDate
+    private let dataBase: Persistence
     
-    var fetchedResultsController: NSFetchedResultsController<Note>
+    var dataSource: DataSourceProtocol
     
-    init(coordinator: NoteListCoordinator, folderId: ObjectID) {
+    init(coordinator: NoteListCoordinator,
+         folderId: ObjectID,
+         dataSource: DataSourceProtocol,
+         dataBase: Persistence = Database.shared) {
         self.coordinator = coordinator
         self.folderId = folderId
-        self.fetchedResultsController = Note.createFetchedResultsController(sort: sort, folderId: folderId as! NSManagedObjectID)
-        try? self.fetchedResultsController.performFetch()
+        self.dataBase = dataBase
+        self.dataSource = dataSource
+        
+        try? self.dataSource.performFetch()
     }
 
     func addNoteTapped() {
         coordinator.showNoteCreation()
     }
     
-    func delete(note: Note) {
-        note.delete()
+    func delete(note: NoteProtocol) {
+        dataBase.delete(note: note)
     }
     
-    func tappedNote(note: Note) {
+    func tappedNote(note: NoteProtocol) {
         coordinator.showNoteDetails(note)
     }
     
@@ -37,10 +42,6 @@ class NoteListViewModel {
         guard sort != self.sort else { return }
         self.sort = sort
         
-        let delegate = fetchedResultsController.delegate
-        fetchedResultsController = Note.createFetchedResultsController(sort: sort, folderId: folderId as! NSManagedObjectID)
-        fetchedResultsController.delegate = delegate
-        
-        try? fetchedResultsController.performFetch()
+        dataSource.perform(sort: sort)
     }
 }

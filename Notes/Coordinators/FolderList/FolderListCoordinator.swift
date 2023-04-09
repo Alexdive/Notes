@@ -5,7 +5,6 @@
 //
 
 import UIKit
-import CoreData
 
 protocol FolderListCoordinating {
     func showNotesList(folderId: ObjectID)

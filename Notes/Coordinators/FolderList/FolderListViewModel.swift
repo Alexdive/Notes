@@ -15,24 +15,24 @@ class FolderListViewModel {
     
     internal init(coordinator: FolderListCoordinating,
                   dataBase: Persistence = Database.shared,
-                  dataSource: DataSourceProtocol = DataSource(sort: .creationDate)) {
+                  dataSource: DataSourceProtocol = FolderDataSource()) {
         self.coordinator = coordinator
         self.dataBase = dataBase
         self.dataSource = dataSource
         try? self.dataSource.performFetch()
     }
-
+    
     func createFolder(name: String) {
         guard !name.isEmpty else { return }
         
-        dataBase.create(entity: .folder(name: name,
-                                        creationDate: Date())) { _ in }
+        dataBase.createFolder(with: name,
+                              creationDate: Date()) { _ in }
     }
     
     func delete(folder: FolderProtocol) {
         dataBase.delete(folder: folder)
     }
-
+    
     func showNotesList(folder: FolderProtocol) {
         coordinator.showNotesList(folderId: folder.contentObjectID)
     }

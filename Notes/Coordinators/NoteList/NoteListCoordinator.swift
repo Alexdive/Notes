@@ -5,7 +5,6 @@
 //
 
 import UIKit
-import CoreData
 
 class NoteListCoordinator: Coordinator {
     private let router: Router
@@ -18,7 +17,8 @@ class NoteListCoordinator: Coordinator {
     
     func start() {
         let notesController: NoteListViewController = NoteListViewController.instantiate()
-        notesController.viewModel = NoteListViewModel(coordinator: self, folderId: folderId)
+        let dataSourece = NoteDataSource(folderId: folderId)
+        notesController.viewModel = NoteListViewModel(coordinator: self, folderId: folderId, dataSource: dataSourece)
         router.push(notesController)
     }
     
@@ -26,7 +26,7 @@ class NoteListCoordinator: Coordinator {
         NoteDetailsCoordinator(router: router, folderId: folderId).start()
     }
     
-    func showNoteDetails(_ note: Note) {
+    func showNoteDetails(_ note: NoteProtocol) {
         NoteDetailsCoordinator(router: router, folderId: folderId).start(note)
     }
 }

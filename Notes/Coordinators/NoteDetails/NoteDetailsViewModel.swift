@@ -5,18 +5,20 @@
 //
 
 import Foundation
-import CoreData
 
 class NoteDetailsViewModel {
     private let folderId: ObjectID
     private lazy var creationDate: Date = { note?.creationDate ?? Date() }()
+    private let dataBase: Persistence
     
-    var note: Note?
+    var note: NoteProtocol?
     var creationDateTitle: String { creationDate.shortDate() }
     var body: String? { note?.body }
     
-    init(folderId: ObjectID) {
+    init(folderId: ObjectID,
+         dataBase: Persistence = Database.shared) {
         self.folderId = folderId
+        self.dataBase = dataBase
     }
     
     func update(body: String) {
@@ -27,9 +29,14 @@ class NoteDetailsViewModel {
         let name = String(body.prefix(20))
         
         if let note = note {
-            note.update(name: name, body: body)
+            dataBase.update(note: note,
+                            with: name,
+                            body: body)
         } else {
-            Note.create(name: name, body: body, creationDate: creationDate, folderObjectId: folderId as! NSManagedObjectID)
+            dataBase.createNote(with: name,
+                                body: body,
+                                creationDate: creationDate,
+                                folderId: folderId)
         }
     }
 }

@@ -12,7 +12,7 @@ class DataBaseMock: Persistence {
     var createdFolderName: String?
     var deletedFolder: FolderProtocol?
     
-    func create(entity: Notes.Entity, completion: @escaping (Error?) -> Void) {
+    func create(entity: Notes.EntityType, completion: @escaping (Error?) -> Void) {
         switch entity {
         case .folder(let name, _):
             createdFolderName = name

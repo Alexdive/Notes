@@ -5,7 +5,6 @@
 //
 
 import UIKit
-import CoreData
 
 class NoteDetailsCoordinator: Coordinator {
     private let router: Router
@@ -22,7 +21,7 @@ class NoteDetailsCoordinator: Coordinator {
         router.push(noteController)
     }
     
-    func start(_ note: Note) {
+    func start(_ note: NoteProtocol) {
         let noteController: NoteDetailsViewController = NoteDetailsViewController.instantiate()
         noteController.viewModel = NoteDetailsViewModel(folderId: folderId)
         noteController.viewModel.note = note

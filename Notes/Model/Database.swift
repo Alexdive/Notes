@@ -7,14 +7,12 @@
 import Foundation
 import CoreData
 
-enum Entity {
-    case folder(name: String, creationDate: Date)
-    case note(name: String, body: String, creationDate: Date, folderObjectId: ObjectID)
-}
-
 protocol Persistence {
-    func create(entity: Entity, completion: @escaping (Error?) -> Void)
+    func createFolder(with name: String, creationDate: Date, completion: @escaping (Error?) -> Void)
+    func createNote(with name: String, body: String, creationDate: Date, folderId: ObjectID)
     func delete(folder: FolderProtocol)
+    func delete(note: NoteProtocol)
+    func update(note: NoteProtocol, with name: String, body: String)
 }
 
 final class Database {
@@ -36,27 +34,34 @@ final class Database {
 }
 
 extension Database: Persistence {
-    func create(entity: Entity, completion: @escaping (Error?) -> Void) {
-        switch entity {
-        case .folder(let name,
-                     let creationDate):
-            Folder.create(name: name,
-                          creationDate: creationDate,
-                          completion: completion)
-        case .note(let name,
-                   let body,
-                   let creationDate,
-                   let folderObjectId):
-            Note.create(name: name,
-                        body: body,
-                        creationDate: creationDate,
-                        folderObjectId: folderObjectId as! NSManagedObjectID)
-        }
+    func createFolder(with name: String, creationDate: Date, completion: @escaping (Error?) -> Void) {
+        Folder.create(name: name,
+                      creationDate: creationDate,
+                      completion: completion)
+    }
+   
+    func createNote(with name: String, body: String, creationDate: Date, folderId: ObjectID) {
+        Note.create(name: name,
+                    body: body,
+                    creationDate: creationDate,
+                    folderObjectId: folderId)
     }
     
     func delete(folder: FolderProtocol) {
         guard let folder = folder as? Folder else { return }
         
         folder.delete()
+    }
+    
+    func delete(note: NoteProtocol) {
+        guard let note = note as? Note else { return }
+        
+        note.delete()
+    }
+    
+    func update(note: NoteProtocol, with name: String, body: String) {
+        guard let note = note as? Note else { return }
+        
+        note.update(name: name, body: body)
     }
 }
