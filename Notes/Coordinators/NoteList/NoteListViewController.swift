@@ -31,6 +31,11 @@ class NoteListViewController: UITableViewController {
         
         navigationController?.setToolbarHidden(false, animated: true)
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewModel.dataSource.delegate = nil
+    }
 
     @IBAction func addNoteButtonAction(_ sender: UIBarButtonItem) {
         viewModel.addNoteTapped()
