@@ -11,14 +11,16 @@ protocol FolderListCoordinating {
 }
 
 class FolderListCoordinator: Coordinator {
-    private let router: Router
+    private let router: Routing
+    let dataBase: Persistence
     
-    init(router: Router) {
+    init(router: Routing, dataBase: Persistence = Database.shared) {
         self.router = router
+        self.dataBase = dataBase
     }
     
     func start() {
-        Database.shared.open { 
+        dataBase.open {
             let folderController: FolderListViewController = FolderListViewController.instantiate()
             folderController.viewModel = FolderListViewModel(coordinator: self)
             

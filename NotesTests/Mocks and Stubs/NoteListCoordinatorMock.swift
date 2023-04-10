@@ -13,6 +13,11 @@ class NoteListCoordinatorMock: NoteListCoordinating {
     var noteCreationHasShown = false
     var noteForDetails: NoteProtocol?
     
+    func start() {
+        
+    }
+    
+    
     func showNoteCreation() {
         noteCreationHasShown = true
     }

@@ -8,6 +8,7 @@ import Foundation
 import CoreData
 
 protocol Persistence {
+    func open(completion: @escaping () -> Void)
     func createFolder(with name: String, creationDate: Date, completion: @escaping (Error?) -> Void)
     func createNote(with name: String, body: String, creationDate: Date, folderId: ObjectID)
     func delete(folder: FolderProtocol)
@@ -15,8 +16,9 @@ protocol Persistence {
     func update(note: NoteProtocol, with name: String, body: String)
 }
 
-final class Database {
+final class Database: Persistence {
     static let shared = Database()
+    private init() { }
     
     let persistentContainer = NSPersistentContainer(name: "Notes")
     
@@ -30,10 +32,6 @@ final class Database {
         })
     }
 
-    private init() { }
-}
-
-extension Database: Persistence {
     func createFolder(with name: String, creationDate: Date, completion: @escaping (Error?) -> Void) {
         Folder.create(name: name,
                       creationDate: creationDate,

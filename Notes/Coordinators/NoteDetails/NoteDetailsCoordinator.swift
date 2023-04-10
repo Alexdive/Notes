@@ -7,10 +7,10 @@
 import UIKit
 
 class NoteDetailsCoordinator: Coordinator {
-    private let router: Router
+    private let router: Routing
     private let folderId: ObjectID
     
-    init(router: Router, folderId: ObjectID) {
+    init(router: Routing, folderId: ObjectID) {
         self.router = router
         self.folderId = folderId
     }

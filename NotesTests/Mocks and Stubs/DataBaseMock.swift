@@ -10,6 +10,8 @@ import Foundation
 
 class DataBaseMock: Persistence {
     // recorded invocations:
+    var openHasCalled = false
+    
     var createdFolderName: String?
     var deletedFolder: FolderProtocol?
     
@@ -23,6 +25,11 @@ class DataBaseMock: Persistence {
     var updatedNoteBody: String?
     
     // interface:
+    func open(completion: @escaping () -> Void) {
+        openHasCalled = true
+        completion()
+    }
+    
     func createFolder(with name: String, creationDate: Date, completion: @escaping (Error?) -> Void) {
         createdFolderName = name
     }

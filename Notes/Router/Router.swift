@@ -6,7 +6,12 @@
 
 import UIKit
 
-final class Router {
+protocol Routing {
+    func push(_ viewController: UIViewController)
+    func setRootController(_ viewController: UIViewController)
+}
+
+final class Router: Routing {
     private let rootViewController: UINavigationController
     
     init(rootViewController: UINavigationController) {
@@ -26,3 +31,9 @@ final class Router {
                           })
     }
 }
+
+#if DEBUG
+extension Router {
+    var exposedRootVC: UINavigationController { return rootViewController }
+}
+#endif
