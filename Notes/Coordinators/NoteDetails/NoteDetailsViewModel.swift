@@ -6,7 +6,7 @@
 
 import Foundation
 
-class NoteDetailsViewModel {
+final class NoteDetailsViewModel {
     private let folderId: ObjectID
     private lazy var creationDate: Date = { note?.creationDate ?? Date() }()
     private let dataBase: Persistence

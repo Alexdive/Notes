@@ -7,7 +7,7 @@
 
 import CoreData
 
-class NoteDataSource: NSObject, DataSourceProtocol {
+final class NoteDataSource: NSObject, DataSourceProtocol {
     
     var folderId: ObjectID
     var fetchResultController: NSFetchedResultsController<Note>

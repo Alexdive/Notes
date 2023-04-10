@@ -6,7 +6,7 @@
 
 import UIKit
 
-class NoteListViewModel {
+final class NoteListViewModel {
     private let coordinator: NoteListCoordinating
     private var sort: SortCondition = .creationDate
     private let dataBase: Persistence

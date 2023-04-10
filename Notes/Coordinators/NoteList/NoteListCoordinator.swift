@@ -12,7 +12,7 @@ protocol NoteListCoordinating {
     func showNoteDetails(_ note: NoteProtocol)
 }
 
-class NoteListCoordinator: Coordinator, NoteListCoordinating {
+final class NoteListCoordinator: Coordinator, NoteListCoordinating {
     private let router: Routing
     private let folderId: ObjectID
     

@@ -6,7 +6,7 @@
 
 import UIKit
 
-class FolderListViewController: UITableViewController {
+final class FolderListViewController: UITableViewController {
     
     @IBOutlet weak var sortButton: UIBarButtonItem!
     

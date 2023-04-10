@@ -6,7 +6,7 @@
 
 import UIKit
 
-class NoteDetailsCoordinator: Coordinator {
+final class NoteDetailsCoordinator: Coordinator {
     private let router: Routing
     private let folderId: ObjectID
     

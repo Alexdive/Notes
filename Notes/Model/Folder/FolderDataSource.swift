@@ -7,7 +7,7 @@
 
 import CoreData
 
-class FolderDataSource: NSObject, DataSourceProtocol {
+final class FolderDataSource: NSObject, DataSourceProtocol {
     
     var fetchResultController: NSFetchedResultsController<Folder>
     

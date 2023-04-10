@@ -6,7 +6,7 @@
 
 import UIKit
 
-class FolderListViewModel {
+final class FolderListViewModel {
     private let dataBase: Persistence
     private let coordinator: FolderListCoordinating
     private var sort: SortCondition = .creationDate

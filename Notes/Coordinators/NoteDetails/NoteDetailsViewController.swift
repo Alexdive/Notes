@@ -6,7 +6,7 @@
 
 import UIKit
 
-class NoteDetailsViewController: UIViewController {
+final class NoteDetailsViewController: UIViewController {
     
     var viewModel: NoteDetailsViewModel!
 

@@ -10,7 +10,7 @@ protocol FolderListCoordinating {
     func showNotesList(folderId: ObjectID)
 }
 
-class FolderListCoordinator: Coordinator {
+final class FolderListCoordinator: Coordinator {
     private let router: Routing
     let dataBase: Persistence
     

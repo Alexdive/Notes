@@ -6,7 +6,7 @@
 
 import UIKit
 
-class NoteListViewController: UITableViewController {
+final class NoteListViewController: UITableViewController {
     var viewModel: NoteListViewModel!
     
     @IBOutlet weak var sortButton: UIBarButtonItem!
@@ -14,8 +14,6 @@ class NoteListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        viewModel.dataSource.delegate = self
         
         tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableView.automaticDimension
@@ -28,8 +26,8 @@ class NoteListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         navigationController?.setToolbarHidden(false, animated: true)
+        viewModel.dataSource.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
