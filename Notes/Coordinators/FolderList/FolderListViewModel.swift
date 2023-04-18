@@ -5,43 +5,42 @@
 //
 
 import UIKit
-import CoreData
 
-class FolderListViewModel {
-    private let coordinator: FolderListCoordinator
+final class FolderListViewModel {
+    private let dataBase: Persistence
+    private let coordinator: FolderListCoordinating
     private var sort: SortCondition = .creationDate
     
-    var fetchedResultsController: NSFetchedResultsController<Folder>
+    var dataSource: DataSourceProtocol
     
-    internal init(coordinator: FolderListCoordinator) {
+    internal init(coordinator: FolderListCoordinating,
+                  dataBase: Persistence = Database.shared,
+                  dataSource: DataSourceProtocol = FolderDataSource()) {
         self.coordinator = coordinator
-        self.fetchedResultsController = Folder.createFetchedResultsController(sort: sort)
-        try? self.fetchedResultsController.performFetch()
+        self.dataBase = dataBase
+        self.dataSource = dataSource
+        try? self.dataSource.performFetch()
     }
-
+    
     func createFolder(name: String) {
         guard !name.isEmpty else { return }
         
-        Folder.create(name: name, creationDate: Date(), completion: { _ in })
+        dataBase.createFolder(with: name,
+                              creationDate: Date()) { _ in }
     }
     
-    func delete(folder: Folder) {
-        folder.delete()
+    func delete(folder: FolderProtocol) {
+        dataBase.delete(folder: folder)
     }
-
-    func showNotesList(folder: Folder) {
-        coordinator.showNotesList(folderId: folder.objectID)
+    
+    func showNotesList(folder: FolderProtocol) {
+        coordinator.showNotesList(folderId: folder.contentObjectID)
     }
     
     func sort(by sort: SortCondition) {
         guard sort != self.sort else { return }
         self.sort = sort
         
-        let delegate = self.fetchedResultsController.delegate
-        
-        fetchedResultsController = Folder.createFetchedResultsController(sort: sort)
-        fetchedResultsController.delegate = delegate
-        
-        try? self.fetchedResultsController.performFetch()
+        dataSource.perform(sort: sort)
     }
 }

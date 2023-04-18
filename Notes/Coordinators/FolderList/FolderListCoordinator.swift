@@ -5,25 +5,32 @@
 //
 
 import UIKit
-import CoreData
 
-class FolderListCoordinator: Coordinator {
-    private let router: Router
+protocol FolderListCoordinating {
+    func showNotesList(folderId: ObjectID)
+}
+
+final class FolderListCoordinator: Coordinator {
+    private let router: Routing
+    let dataBase: Persistence
     
-    init(router: Router) {
+    init(router: Routing, dataBase: Persistence = Database.shared) {
         self.router = router
+        self.dataBase = dataBase
     }
     
     func start() {
-        Database.shared.open { 
+        dataBase.open {
             let folderController: FolderListViewController = FolderListViewController.instantiate()
             folderController.viewModel = FolderListViewModel(coordinator: self)
             
             self.router.setRootController(folderController)
         }
     }
-    
-    func showNotesList(folderId: NSManagedObjectID) {
+}
+
+extension FolderListCoordinator: FolderListCoordinating {
+    func showNotesList(folderId: ObjectID) {
         NoteListCoordinator(router: router, folderId: folderId).start()
     }
 }

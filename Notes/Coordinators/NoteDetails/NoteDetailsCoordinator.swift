@@ -5,13 +5,12 @@
 //
 
 import UIKit
-import CoreData
 
-class NoteDetailsCoordinator: Coordinator {
-    private let router: Router
-    private let folderId: NSManagedObjectID
+final class NoteDetailsCoordinator: Coordinator {
+    private let router: Routing
+    private let folderId: ObjectID
     
-    init(router: Router, folderId: NSManagedObjectID) {
+    init(router: Routing, folderId: ObjectID) {
         self.router = router
         self.folderId = folderId
     }
@@ -22,7 +21,7 @@ class NoteDetailsCoordinator: Coordinator {
         router.push(noteController)
     }
     
-    func start(_ note: Note) {
+    func start(_ note: NoteProtocol) {
         let noteController: NoteDetailsViewController = NoteDetailsViewController.instantiate()
         noteController.viewModel = NoteDetailsViewModel(folderId: folderId)
         noteController.viewModel.note = note

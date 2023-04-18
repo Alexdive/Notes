@@ -10,7 +10,7 @@ protocol Coordinator {
     func start()
 }
 
-class AppCoordinator: Coordinator {
+final class AppCoordinator: Coordinator {
     private let router: Router
     
     init(router: Router) {

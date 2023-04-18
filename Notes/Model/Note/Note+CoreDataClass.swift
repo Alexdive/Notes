@@ -8,15 +8,25 @@
 import Foundation
 import CoreData
 
+public protocol NoteProtocol: AnyObject, DataSourceResult {
+    var body: String? { get set }
+    var creationDate: Date? { get set }
+    var name: String? { get set }
+    var folder: Folder? { get set }
+    
+    var contentObjectID: ObjectID { get }
+}
+
 enum NoteError: Error {
     case existingNote
 }
 
 @objc(Note)
 public class Note: NSManagedObject {
-    static func create(name: String, body: String, creationDate: Date, folderObjectId: NSManagedObjectID) {
+    static func create(name: String, body: String, creationDate: Date, folderObjectId: ObjectID) {
         Database.shared.persistentContainer.performBackgroundTask { context in
-            guard let folder = context.object(with: folderObjectId) as? Folder else { return }
+            guard let objectID = folderObjectId as? NSManagedObjectID,
+                let folder = context.object(with: objectID) as? Folder else { return }
             
             let note = Note(context: context)
             note.body = body
@@ -28,10 +38,11 @@ public class Note: NSManagedObject {
         }
     }
     
-    static func createFetchedResultsController(sort: SortCondition, folderId: NSManagedObjectID) -> NSFetchedResultsController<Note> {
+    static func createFetchedResultsController(sort: SortCondition, folderId: ObjectID) -> NSFetchedResultsController<Note> {
+       
         let fetchRequest: NSFetchRequest<Note> = Note.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: sort.rawValue, ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "folder == %@", folderId)
+        fetchRequest.predicate = NSPredicate(format: "folder == %@", (folderId as? NSManagedObjectID) ?? "")
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest,
                                              managedObjectContext: Database.shared.viewContext,
                                              sectionNameKeyPath: nil,
@@ -39,7 +50,7 @@ public class Note: NSManagedObject {
         return frc
     }
     
-    func update(name: String, body: String) {
+    public func update(name: String, body: String) {
         Database.shared.persistentContainer.performBackgroundTask { context in
             guard let note = context.object(with: self.objectID) as? Note else { return }
             note.body = body
@@ -55,4 +66,8 @@ public class Note: NSManagedObject {
             try? context.save()
         }
     }
+}
+
+extension Note: NoteProtocol {
+    public var contentObjectID: ObjectID { objectID }
 }

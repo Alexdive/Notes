@@ -5,9 +5,8 @@
 //
 
 import UIKit
-import CoreData
 
-class FolderListViewController: UITableViewController {
+final class FolderListViewController: UITableViewController {
     
     @IBOutlet weak var sortButton: UIBarButtonItem!
     
@@ -23,14 +22,14 @@ class FolderListViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        viewModel.fetchedResultsController.delegate = self
+        viewModel.dataSource.delegate = self
         tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        viewModel.fetchedResultsController.delegate = nil
+        viewModel.dataSource.delegate = nil
     }
     
     @IBAction private func addFolderButtonAction(_ sender: UIBarButtonItem) {
@@ -62,25 +61,28 @@ class FolderListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: FolderViewCell = dequeueCell(indexPath: indexPath)
         
-        cell.setupViews(folder: viewModel.fetchedResultsController.object(at: indexPath))
+        guard let folder = viewModel.dataSource.object(at: indexPath) as? FolderProtocol else { return UITableViewCell() }
+        cell.setupViews(folder: folder)
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            viewModel.delete(folder: viewModel.fetchedResultsController.object(at: indexPath))
+            guard let folder = viewModel.dataSource.object(at: indexPath) as? FolderProtocol else { return }
+            viewModel.delete(folder: folder)
         }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        return viewModel.dataSource.sections?[section].numberOfObjects ?? 0
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        viewModel.showNotesList(folder: viewModel.fetchedResultsController.object(at: indexPath))
+        guard let folder = viewModel.dataSource.object(at: indexPath) as? FolderProtocol else { return }
+        viewModel.showNotesList(folder: folder)
     }
     
     private func setupTableView() {
@@ -104,21 +106,19 @@ class FolderListViewController: UITableViewController {
     }
 }
 
-extension FolderListViewController: NSFetchedResultsControllerDelegate {
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+extension FolderListViewController: DataSourceDelegate {
+    func controllerWillChangeContent() {
         tableView.beginUpdates()
     }
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    func controllerDidChangeContent() {
         tableView.endUpdates()
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChange anObject: Any,
+    func controller(didChange anObject: Any,
                     at indexPath: IndexPath?,
-                    for type: NSFetchedResultsChangeType,
+                    for type: DataSourceChangeType,
                     newIndexPath: IndexPath?) {
-        
         switch type {
         case .delete:
             if let indexPath = indexPath {
@@ -134,12 +134,10 @@ extension FolderListViewController: NSFetchedResultsControllerDelegate {
             }
         case .update:
             if let indexPath = indexPath,
-               let folder = anObject as? Folder,
+               let folder = anObject as? FolderProtocol,
                let cell = tableView.cellForRow(at: indexPath) as? FolderViewCell {
                 cell.setupViews(folder: folder)
             }
-        default:
-            break
         }
     }
 }

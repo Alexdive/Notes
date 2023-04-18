@@ -10,7 +10,7 @@ class FolderViewCell: UITableViewCell {
     @IBOutlet weak var notesCountLabel: UILabel!
     @IBOutlet weak var folderNameLabel: UILabel!
     
-    func setupViews(folder: Folder) {
+    func setupViews(folder: FolderProtocol) {
         notesCountLabel.text = String(folder.notes?.count ?? 0)
         folderNameLabel.text = folder.name
     }

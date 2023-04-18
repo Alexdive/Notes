@@ -5,9 +5,8 @@
 //
 
 import UIKit
-import CoreData
 
-class NoteListViewController: UITableViewController {
+final class NoteListViewController: UITableViewController {
     var viewModel: NoteListViewModel!
     
     @IBOutlet weak var sortButton: UIBarButtonItem!
@@ -15,8 +14,6 @@ class NoteListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        viewModel.fetchedResultsController.delegate = self
         
         tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableView.automaticDimension
@@ -29,8 +26,13 @@ class NoteListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         navigationController?.setToolbarHidden(false, animated: true)
+        viewModel.dataSource.delegate = self
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewModel.dataSource.delegate = nil
     }
 
     @IBAction func addNoteButtonAction(_ sender: UIBarButtonItem) {
@@ -40,24 +42,31 @@ class NoteListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: NoteViewCell = dequeueCell(indexPath: indexPath)
         
-        cell.setupView(note: viewModel.fetchedResultsController.object(at: indexPath))
+        guard let note = viewModel.dataSource.object(at: indexPath) as? NoteProtocol else { return UITableViewCell()}
+        
+        cell.setupView(note: note)
         
         return cell
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        return viewModel.dataSource.sections?[section].numberOfObjects ?? 0
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        viewModel.tappedNote(note: viewModel.fetchedResultsController.object(at: indexPath))
+        guard let note = viewModel.dataSource.object(at: indexPath) as? NoteProtocol else { return }
+        
+        viewModel.tappedNote(note: note)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            viewModel.delete(note: viewModel.fetchedResultsController.object(at: indexPath))
+            
+            guard let note = viewModel.dataSource.object(at: indexPath) as? NoteProtocol else { return }
+            
+            viewModel.delete(note: note)
         }
     }
     
@@ -74,26 +83,21 @@ class NoteListViewController: UITableViewController {
     }
     
     private func updateToolBar() {
-        notesCountLabel.title = "\(viewModel.fetchedResultsController.sections?.first?.numberOfObjects ?? 0) notes"
+        notesCountLabel.title = "\(viewModel.dataSource.sections?.first?.numberOfObjects ?? 0) notes"
     }
 }
 
-extension NoteListViewController: NSFetchedResultsControllerDelegate {
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+extension NoteListViewController: DataSourceDelegate {
+    func controllerWillChangeContent() {
         tableView.beginUpdates()
     }
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    func controllerDidChangeContent() {
         updateToolBar()
         tableView.endUpdates()
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChange anObject: Any,
-                    at indexPath: IndexPath?,
-                    for type: NSFetchedResultsChangeType,
-                    newIndexPath: IndexPath?) {
-        
+    func controller(didChange anObject: Any, at indexPath: IndexPath?, for type: DataSourceChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .delete:
             if let indexPath = indexPath {
@@ -113,8 +117,6 @@ extension NoteListViewController: NSFetchedResultsControllerDelegate {
                let cell = tableView.cellForRow(at: indexPath) as? NoteViewCell {
                 cell.setupView(note: note)
             }
-        default:
-            break
         }
     }
 }

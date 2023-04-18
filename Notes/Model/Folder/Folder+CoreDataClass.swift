@@ -8,11 +8,19 @@
 import Foundation
 import CoreData
 
+public protocol FolderProtocol: AnyObject, DataSourceResult {
+    var creationDate: Date? { get set }
+    var name: String? { get set }
+    var notes: NSOrderedSet? { get set }
+    
+    var contentObjectID: ObjectID { get }
+}
+
 enum FolderError: Error {
     case existingFolder
 }
 
-enum SortCondition: String {
+public enum SortCondition: String {
     case name
     case creationDate
 }
@@ -20,14 +28,14 @@ enum SortCondition: String {
 @objc(Folder)
 public class Folder: NSManagedObject {
         
-    static func create(name: String, creationDate: Date, completion: @escaping (Error?) -> Void) {
+    static func create(name: String, creationDate: Date, completion: ((Error?) -> Void)?) {
         Database.shared.persistentContainer.performBackgroundTask { context in
             let fetchRequest: NSFetchRequest<Folder> = Folder.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "name == %@", name)
             fetchRequest.fetchLimit = 1
 
             if let result = try? context.fetch(fetchRequest), !result.isEmpty {
-                completion(FolderError.existingFolder)
+                completion?(FolderError.existingFolder)
                 
                 return
             }
@@ -36,10 +44,14 @@ public class Folder: NSManagedObject {
             folder.name = name
             folder.creationDate = creationDate
 
-            try? context.save()
+            do {
+                try context.save()
+            } catch {
+                print(error.localizedDescription)
+            }
 
             DispatchQueue.main.async {
-                completion(nil)
+                completion?(nil)
             }
         }
     }
@@ -62,4 +74,8 @@ public class Folder: NSManagedObject {
             try? context.save()
         }
     }
+}
+
+extension Folder: FolderProtocol {
+    public var contentObjectID: ObjectID { objectID }
 }
