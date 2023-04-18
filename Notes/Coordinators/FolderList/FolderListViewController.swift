@@ -8,12 +8,16 @@ import UIKit
 
 final class FolderListViewController: UITableViewController {
     
+    @IBOutlet weak var createFolderButton: UIBarButtonItem!
     @IBOutlet weak var sortButton: UIBarButtonItem!
     
     var viewModel: FolderListViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        createFolderButton.accessibilityIdentifier = "createFolderButton"
+        tableView.accessibilityIdentifier = "foldersList"
         
         setupTableView()
         createSortMenu()
@@ -49,9 +53,13 @@ final class FolderListViewController: UITableViewController {
             self.tableView.reloadData()
         }
         
+        saveAction.accessibilityIdentifier = "saveFolderName"
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         
-        alert.addTextField()
+        alert.addTextField { textField in
+            textField.accessibilityIdentifier = "folderNameTextField"
+        }
         alert.addAction(cancelAction)
         alert.addAction(saveAction)
         
