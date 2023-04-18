@@ -9,11 +9,14 @@ import UIKit
 final class NoteListViewController: UITableViewController {
     var viewModel: NoteListViewModel!
     
+    @IBOutlet weak var createNoteButton: UIBarButtonItem!
     @IBOutlet weak var sortButton: UIBarButtonItem!
     @IBOutlet weak var notesCountLabel: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        createNoteButton.accessibilityIdentifier = "createNoteButton"
+        tableView.accessibilityIdentifier = "notesList"
         
         tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableView.automaticDimension
